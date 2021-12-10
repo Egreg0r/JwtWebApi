@@ -1,3 +1,4 @@
+using JwtWebApi.Model;
 using JwtWebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -10,11 +11,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Npgsql;
+using Npgsql.EntityFrameworkCore;
 
 namespace JwtWebApi
 {
@@ -58,8 +63,9 @@ namespace JwtWebApi
                         new string[]{ }
                     }
                 });
-            });
 
+            });
+            
             services.AddAuthentication(au =>
             {
                 au.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,12 +84,12 @@ namespace JwtWebApi
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])) //Configuration["JwtToken:SecretKey"]
                     };
                 });
-
-            services.AddTransient<IUserService, UserService>();
+            //services.AddTransient<IUserService, UserService>();
+            services.AddDbContext<BaseContext>(option => option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BaseContext context)
         {
             if (env.IsDevelopment())
             {
@@ -93,6 +99,9 @@ namespace JwtWebApi
             }
 
             app.UseHttpsRedirection();
+
+            //create base if first start
+            if (env.IsDevelopment()) context.Database.EnsureCreated();
 
             app.UseRouting();
 
