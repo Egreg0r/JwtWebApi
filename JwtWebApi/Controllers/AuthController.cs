@@ -12,6 +12,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using JwtWebApi.Model;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace JwtWebApi.Controllers
 {
@@ -21,10 +23,13 @@ namespace JwtWebApi.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
+
+
         public AuthController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
             _userService = userService;
+
         }
 
         [AllowAnonymous]

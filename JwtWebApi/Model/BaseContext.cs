@@ -13,8 +13,8 @@ namespace JwtWebApi.Model
 {
     public class BaseContext : DbContext
     {
-        DbSet<LoginModel> loginModels { get; set; }
-        DbSet<Ticket> tickets { get; set; }
+        public DbSet<LoginModel> loginModels { get; set; }
+        public  DbSet<Ticket> tickets { get; set; }
 
         public BaseContext(DbContextOptions<BaseContext> options) : base(options)
         {
