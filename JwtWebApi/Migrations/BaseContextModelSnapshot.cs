@@ -83,21 +83,21 @@ namespace JwtWebApi.Migrations
                         new
                         {
                             Id = 1,
-                            createDate = new DateTime(2021, 12, 11, 16, 29, 45, 81, DateTimeKind.Local).AddTicks(2485),
+                            createDate = new DateTime(2021, 12, 11, 18, 48, 45, 88, DateTimeKind.Local).AddTicks(4910),
                             loginModelId = 1,
                             message = "some text from fist User"
                         },
                         new
                         {
                             Id = 2,
-                            createDate = new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9321),
+                            createDate = new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(4787),
                             loginModelId = 1,
                             message = "some text 2 from fist User"
                         },
                         new
                         {
                             Id = 3,
-                            createDate = new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9766),
+                            createDate = new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(5228),
                             loginModelId = 2,
                             message = "some text from second User"
                         });
@@ -105,13 +105,13 @@ namespace JwtWebApi.Migrations
 
             modelBuilder.Entity("JwtWebApi.Model.Ticket", b =>
                 {
-                    b.HasOne("JwtWebApi.Model.LoginModel", "loginModel")
+                    b.HasOne("JwtWebApi.Model.LoginModel", "LoginModel")
                         .WithMany("Tickets")
                         .HasForeignKey("loginModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("loginModel");
+                    b.Navigation("LoginModel");
                 });
 
             modelBuilder.Entity("JwtWebApi.Model.LoginModel", b =>

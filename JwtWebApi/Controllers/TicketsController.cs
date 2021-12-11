@@ -19,11 +19,6 @@ namespace JwtWebApi.Controllers
         public TicketsController(BaseContext context)
         {
             _context = context;
-            //if (_context.tickets.Count() ==0)
-            //{
-            //    _context.tickets.AddRange(FakeDataFactory.tickets);
-            //    _context.SaveChanges();
-            //}
 
         }
 
@@ -34,7 +29,7 @@ namespace JwtWebApi.Controllers
             return await _context.tickets.ToListAsync();
         }
 
-        // GET: api/Tickets/5
+        // GET: api/Tickets/token
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
@@ -48,67 +43,24 @@ namespace JwtWebApi.Controllers
             return ticket;
         }
 
-        // PUT: api/Tickets/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTicket(int id, Ticket ticket)
-        {
-            if (id != ticket.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(ticket).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TicketExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Tickets
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
+        public async Task<ActionResult<IEnumerable<Ticket>>> PostTicket(Ticket ticket)
         {
-            _context.tickets.Add(ticket);
-            await _context.SaveChangesAsync();
+            if (ticket.message.Contains("history"))
+            {
+                var col = _context.tickets.Count() - 10;
+                return await _context.tickets.Skip(col).ToListAsync();
+            }
+            else
+            {
+                _context.tickets.Add(ticket);
+                await _context.SaveChangesAsync();
+            }
 
             return CreatedAtAction("GetTicket", new { id = ticket.Id }, ticket);
         }
 
-        // DELETE: api/Tickets/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTicket(int id)
-        {
-            var ticket = await _context.tickets.FindAsync(id);
-            if (ticket == null)
-            {
-                return NotFound();
-            }
-
-            _context.tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool TicketExists(int id)
-        {
-            return _context.tickets.Any(e => e.Id == id);
-        }
     }
 }

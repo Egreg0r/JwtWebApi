@@ -1,12 +1,18 @@
-﻿using System;
+﻿using JwtWebApi.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using JwtWebApi.Model;
-using JwtWebApi.Data;
 
 namespace JwtWebApi.Controllers
 {
@@ -15,69 +21,48 @@ namespace JwtWebApi.Controllers
     public class LoginModelsController : ControllerBase
     {
         private readonly BaseContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public LoginModelsController(BaseContext context)
+
+        public LoginModelsController(BaseContext context, IConfiguration configuration, IUserService userService)
         {
             _context = context;
-            //if (_context.loginModels.Count() == 0)
-            //{
-            //    _context.loginModels.AddRange(FakeDataFactory.loginModels);
-            //    _context.SaveChanges();
-            //}
+            _configuration = configuration;
+            _userService = userService;
 
         }
 
+
+        [AllowAnonymous]
+        [HttpPost(nameof(Auth))]
+        public IActionResult Auth([FromBody] LoginModel data)
+        {
+            bool isValid = _userService.IsValidUserInformation(data, _context);
+            if (isValid)
+            {
+                var tokenString = GenerateJwtToken(data.UserName);
+                return Ok(new { Token = tokenString, Message = "Success" });
+            }
+            return BadRequest("Please pass the valid Username and Password");
+        }
+
+
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet(nameof(GetResult))]
+        public IActionResult GetResult()
+        {
+            return Ok("API Validated");
+        }
+
+
         // GET: api/LoginModels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LoginModel>>> GetloginModels()
+        public async Task<ActionResult<IEnumerable<LoginModel>>> GetLoginModels()
         {
             return await _context.loginModels.ToListAsync();
         }
 
-        // GET: api/LoginModels/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LoginModel>> GetLoginModel(int id)
-        {
-            var loginModel = await _context.loginModels.FindAsync(id);
-
-            if (loginModel == null)
-            {
-                return NotFound();
-            }
-
-            return loginModel;
-        }
-
-        // PUT: api/LoginModels/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutLoginModel(int id, LoginModel loginModel)
-        //{
-        //    if (id != loginModel.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(loginModel).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!LoginModelExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
 
         // POST: api/LoginModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -90,25 +75,26 @@ namespace JwtWebApi.Controllers
             return CreatedAtAction("GetLoginModel", new { id = loginModel.Id }, loginModel);
         }
 
-        // DELETE: api/LoginModels/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteLoginModel(int id)
-        //{
-        //    var loginModel = await _context.loginModels.FindAsync(id);
-        //    if (loginModel == null)
-        //    {
-        //        return NotFound();
-        //    }
+        /// <summary>
+        /// Generate JWT Token after successful login.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        private string GenerateJwtToken(string userName)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[] { new Claim("id", userName) }),
+                    Expires = DateTime.UtcNow.AddHours(1),
+                    Issuer = _configuration["Jwt:Issuer"],
+                    Audience = _configuration["Jwt:Audience"],
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
+        }
 
-        //    _context.loginModels.Remove(loginModel);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private bool LoginModelExists(int id)
-        //{
-        //    return _context.loginModels.Any(e => e.Id == id);
-        //}
     }
 }

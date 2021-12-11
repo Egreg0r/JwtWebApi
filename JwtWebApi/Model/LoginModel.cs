@@ -14,10 +14,10 @@ namespace JwtWebApi.Model
     [Index("UserName", IsUnique = true)]
     public class LoginModel:BaseEntity
     {
-        public LoginModel() 
-        { 
-            Tickets = new List<Ticket>(); 
-        }
+        //public LoginModel() 
+        //{ 
+        //    Tickets = new List<Ticket>(); 
+        //}
 
         [Required]
         [MinLength(3, ErrorMessage="Имя не менее трех символов")]
@@ -27,6 +27,6 @@ namespace JwtWebApi.Model
         [MinLength(6, ErrorMessage ="Пароль должен быть не менее 6 символов")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public virtual ICollection<Ticket> Tickets { get; set; }
+        //public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

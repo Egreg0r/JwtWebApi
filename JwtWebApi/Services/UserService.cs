@@ -6,11 +6,12 @@ using JwtWebApi.Model;
 
 namespace JwtWebApi.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
-        public bool IsValidUserInformation(LoginModel model)
+        public bool IsValidUserInformation(LoginModel model, BaseContext context)
         {
-            if (model.UserName.Equals("Jay") && model.Password.Equals("123456")) return true;
+            if (context.loginModels.FirstOrDefault(x => x.UserName == model.UserName && x.Password == model.Password)!=null) return true;
+            //if (model.UserName.Equals("FirstUser") && model.Password.Equals("PasswordFistUser")) return true;
             else return false;
         }
 

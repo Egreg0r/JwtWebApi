@@ -9,6 +9,6 @@ namespace JwtWebApi.Services
 
     public interface IUserService
     {
-        bool IsValidUserInformation(LoginModel model);
+        bool IsValidUserInformation(LoginModel model, BaseContext context);
     }
 }

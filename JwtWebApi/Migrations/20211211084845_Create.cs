@@ -57,9 +57,9 @@ namespace JwtWebApi.Migrations
                 columns: new[] { "Id", "createDate", "loginModelId", "message" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2021, 12, 11, 16, 29, 45, 81, DateTimeKind.Local).AddTicks(2485), 1, "some text from fist User" },
-                    { 2, new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9321), 1, "some text 2 from fist User" },
-                    { 3, new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9766), 2, "some text from second User" }
+                    { 1, new DateTime(2021, 12, 11, 18, 48, 45, 88, DateTimeKind.Local).AddTicks(4910), 1, "some text from fist User" },
+                    { 2, new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(4787), 1, "some text 2 from fist User" },
+                    { 3, new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(5228), 2, "some text from second User" }
                 });
 
             migrationBuilder.CreateIndex(
