@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using JwtWebApi.Model;
 using JwtWebApi.Data;
+
 
 namespace JwtWebApi.Controllers
 {
@@ -23,43 +25,36 @@ namespace JwtWebApi.Controllers
         }
 
         // GET: api/Tickets
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> Gettickets()
         {
             return await _context.tickets.ToListAsync();
         }
 
-        // GET: api/Tickets/token
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Ticket>> GetTicket(int id)
-        {
-            var ticket = await _context.tickets.FindAsync(id);
-
-            if (ticket == null)
-            {
-                return NotFound();
-            }
-
-            return ticket;
-        }
-
         // POST: api/Tickets
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<ActionResult<IEnumerable<Ticket>>> PostTicket(Ticket ticket)
         {
-            if (ticket.message.Contains("history"))
+            if (ticket.Message == ("history 10"))
             {
-                var col = _context.tickets.Count() - 10;
-                return await _context.tickets.Skip(col).ToListAsync();
+
+                var t = await _context.tickets.Where(l => l.LoginModelUserName == ticket.LoginModelUserName).ToListAsync();
+                return t.TakeLast(10).ToList();
             }
             else
             {
-                _context.tickets.Add(ticket);
+                _context.tickets.Add(new Ticket
+                {
+                    LoginModelUserName = ticket.LoginModelUserName,
+                    Message = ticket.Message,
+                    CreateDate = DateTime.Now
+                }) ;
                 await _context.SaveChangesAsync();
             }
 
-            return CreatedAtAction("GetTicket", new { id = ticket.Id }, ticket);
+            return Ok ("Ticket is add succseful ");
         }
 
     }

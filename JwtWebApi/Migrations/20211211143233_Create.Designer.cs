@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JwtWebApi.Migrations
 {
     [DbContext(typeof(BaseContext))]
-    [Migration("20211211084845_Create")]
+    [Migration("20211211143233_Create")]
     partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,38 +23,27 @@ namespace JwtWebApi.Migrations
 
             modelBuilder.Entity("JwtWebApi.Model.LoginModel", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
+                    b.HasKey("UserName");
 
                     b.ToTable("loginModels");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Password = "PasswordFistUser",
-                            UserName = "FirstUser"
+                            UserName = "FirstUser",
+                            Password = "PasswordFistUser"
                         },
                         new
                         {
-                            Id = 2,
-                            Password = "PasswordSecond",
-                            UserName = "SecondUser"
+                            UserName = "SecondUser",
+                            Password = "PasswordSecond"
                         });
                 });
 
@@ -65,19 +54,20 @@ namespace JwtWebApi.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("createDate")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("loginModelId")
-                        .HasColumnType("integer");
+                    b.Property<string>("LoginModelUserName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<string>("message")
+                    b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("loginModelId");
+                    b.HasIndex("LoginModelUserName");
 
                     b.ToTable("tickets");
 
@@ -85,40 +75,49 @@ namespace JwtWebApi.Migrations
                         new
                         {
                             Id = 1,
-                            createDate = new DateTime(2021, 12, 11, 18, 48, 45, 88, DateTimeKind.Local).AddTicks(4910),
-                            loginModelId = 1,
-                            message = "some text from fist User"
+                            CreateDate = new DateTime(2021, 12, 12, 0, 32, 33, 237, DateTimeKind.Local).AddTicks(4592),
+                            LoginModelUserName = "FirstUser",
+                            Message = "some text №1 from fist User"
                         },
                         new
                         {
                             Id = 2,
-                            createDate = new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(4787),
-                            loginModelId = 1,
-                            message = "some text 2 from fist User"
+                            CreateDate = new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(1017),
+                            LoginModelUserName = "FirstUser",
+                            Message = "some text №2 from fist User"
                         },
                         new
                         {
                             Id = 3,
-                            createDate = new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(5228),
-                            loginModelId = 2,
-                            message = "some text from second User"
+                            CreateDate = new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(1577),
+                            LoginModelUserName = "FirstUser",
+                            Message = "some text №3 from fist User"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreateDate = new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(2106),
+                            LoginModelUserName = "FirstUser",
+                            Message = "some text №4 from fist User"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreateDate = new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(2625),
+                            LoginModelUserName = "SecondUser",
+                            Message = "some text №1 from second User"
                         });
                 });
 
             modelBuilder.Entity("JwtWebApi.Model.Ticket", b =>
                 {
                     b.HasOne("JwtWebApi.Model.LoginModel", "LoginModel")
-                        .WithMany("Tickets")
-                        .HasForeignKey("loginModelId")
+                        .WithMany()
+                        .HasForeignKey("LoginModelUserName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("LoginModel");
-                });
-
-            modelBuilder.Entity("JwtWebApi.Model.LoginModel", b =>
-                {
-                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

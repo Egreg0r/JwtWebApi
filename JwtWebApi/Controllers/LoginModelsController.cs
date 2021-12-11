@@ -1,4 +1,5 @@
 ﻿using JwtWebApi.Services;
+using JwtWebApi.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,6 @@ using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using JwtWebApi.Model;
 
 namespace JwtWebApi.Controllers
 {
@@ -33,16 +33,15 @@ namespace JwtWebApi.Controllers
 
         }
 
-
         [AllowAnonymous]
         [HttpPost(nameof(Auth))]
-        public IActionResult Auth([FromBody] LoginModel data)
+        public IActionResult Auth([FromBody] LoginModel model )
         {
-            bool isValid = _userService.IsValidUserInformation(data, _context);
+            bool isValid = _userService.IsValidUserInformation(model, _context);
             if (isValid)
             {
-                var tokenString = GenerateJwtToken(data.UserName);
-                return Ok(new { Token = tokenString, Message = "Success" });
+                var tokenString = GenerateJwtToken(model.UserName);
+                return Ok(new { Token = tokenString});
             }
             return BadRequest("Please pass the valid Username and Password");
         }
@@ -53,26 +52,6 @@ namespace JwtWebApi.Controllers
         public IActionResult GetResult()
         {
             return Ok("API Validated");
-        }
-
-
-        // GET: api/LoginModels
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<LoginModel>>> GetLoginModels()
-        {
-            return await _context.loginModels.ToListAsync();
-        }
-
-
-        // POST: api/LoginModels
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<LoginModel>> PostLoginModel(LoginModel loginModel)
-        {
-            _context.loginModels.Add(loginModel);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetLoginModel", new { id = loginModel.Id }, loginModel);
         }
 
         /// <summary>

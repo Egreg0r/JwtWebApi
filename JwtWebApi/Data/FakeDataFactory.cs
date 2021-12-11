@@ -12,14 +12,12 @@ namespace JwtWebApi.Data
         {
             new LoginModel()
             {
-                Id = 1,
                 UserName = "FirstUser",
                 Password = "PasswordFistUser",
             },
 
             new LoginModel()
             {
-                Id = 2,
                 UserName = "SecondUser",
                 Password = "PasswordSecond",
             }
@@ -29,27 +27,41 @@ namespace JwtWebApi.Data
         {
             new Ticket()
             {
-                Id = 1,
-                message = "some text from fist User",
-                createDate = DateTime.Now,
-                loginModelId = defLoginModels.First(x => x.Id == 1).Id
+                Id =1,
+                Message = "some text №1 from fist User",
+                CreateDate = DateTime.Now,
+                LoginModelUserName = defLoginModels.First(x => x.UserName == "FirstUser").UserName
             },
 
             new Ticket()
             {
                 Id = 2,
-                message = "some text 2 from fist User",
-                createDate = DateTime.Now,
-                loginModelId = defLoginModels.First(x => x.Id == 1).Id
+                Message = "some text №2 from fist User",
+                CreateDate = DateTime.Now,
+                LoginModelUserName = defLoginModels.First(x => x.UserName == "FirstUser").UserName
+            },
+            new Ticket()
+            {
+                Id = 3,
+                Message = "some text №3 from fist User",
+                CreateDate = DateTime.Now,
+                LoginModelUserName = defLoginModels.First(x => x.UserName == "FirstUser").UserName
             },
 
             new Ticket()
             {
-                Id = 3,
-                message = "some text from second User",
-                createDate = DateTime.Now,
-                loginModelId = defLoginModels.First(x => x.Id == 2).Id
+                Id = 4,
+                Message = "some text №4 from fist User",
+                CreateDate = DateTime.Now,
+                LoginModelUserName = defLoginModels.First(x => x.UserName == "FirstUser").UserName
+            },
 
+            new Ticket()
+            {
+                Id = 5,
+                Message = "some text №1 from second User",
+                CreateDate = DateTime.Now,
+                LoginModelUserName = defLoginModels.First(x => x.UserName == "SecondUser").UserName
             },
 
         };

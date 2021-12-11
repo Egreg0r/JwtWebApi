@@ -15,10 +15,10 @@ namespace JwtWebApi.Model
     public class Ticket:BaseEntity
     {
         [Required]
-        public string message { get; set; }
+        public string Message { get; set; }
         [Required]
-        public int loginModelId { get; set; }
+        public string LoginModelUserName { get; set; }
         public virtual LoginModel LoginModel { get; set; }
-        public DateTime createDate { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 }

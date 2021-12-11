@@ -11,15 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JwtWebApi.Model
 {
-    [Index("UserName", IsUnique = true)]
-    public class LoginModel:BaseEntity
+    public class LoginModel
     {
-        //public LoginModel() 
-        //{ 
-        //    Tickets = new List<Ticket>(); 
-        //}
-
-        [Required]
+        [Key]
         [MinLength(3, ErrorMessage="Имя не менее трех символов")]
         public string UserName { get; set; }
         
@@ -27,6 +21,5 @@ namespace JwtWebApi.Model
         [MinLength(6, ErrorMessage ="Пароль должен быть не менее 6 символов")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        //public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

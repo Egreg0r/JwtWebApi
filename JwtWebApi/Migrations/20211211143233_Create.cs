@@ -12,14 +12,12 @@ namespace JwtWebApi.Migrations
                 name: "loginModels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserName = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_loginModels", x => x.Id);
+                    table.PrimaryKey("PK_loginModels", x => x.UserName);
                 });
 
             migrationBuilder.CreateTable(
@@ -28,50 +26,46 @@ namespace JwtWebApi.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    message = table.Column<string>(type: "text", nullable: false),
-                    loginModelId = table.Column<int>(type: "integer", nullable: false),
-                    createDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Message = table.Column<string>(type: "text", nullable: false),
+                    LoginModelUserName = table.Column<string>(type: "text", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tickets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tickets_loginModels_loginModelId",
-                        column: x => x.loginModelId,
+                        name: "FK_tickets_loginModels_LoginModelUserName",
+                        column: x => x.LoginModelUserName,
                         principalTable: "loginModels",
-                        principalColumn: "Id",
+                        principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "loginModels",
-                columns: new[] { "Id", "Password", "UserName" },
+                columns: new[] { "UserName", "Password" },
                 values: new object[,]
                 {
-                    { 1, "PasswordFistUser", "FirstUser" },
-                    { 2, "PasswordSecond", "SecondUser" }
+                    { "FirstUser", "PasswordFistUser" },
+                    { "SecondUser", "PasswordSecond" }
                 });
 
             migrationBuilder.InsertData(
                 table: "tickets",
-                columns: new[] { "Id", "createDate", "loginModelId", "message" },
+                columns: new[] { "Id", "CreateDate", "LoginModelUserName", "Message" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2021, 12, 11, 18, 48, 45, 88, DateTimeKind.Local).AddTicks(4910), 1, "some text from fist User" },
-                    { 2, new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(4787), 1, "some text 2 from fist User" },
-                    { 3, new DateTime(2021, 12, 11, 18, 48, 45, 90, DateTimeKind.Local).AddTicks(5228), 2, "some text from second User" }
+                    { 1, new DateTime(2021, 12, 12, 0, 32, 33, 237, DateTimeKind.Local).AddTicks(4592), "FirstUser", "some text №1 from fist User" },
+                    { 2, new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(1017), "FirstUser", "some text №2 from fist User" },
+                    { 3, new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(1577), "FirstUser", "some text №3 from fist User" },
+                    { 4, new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(2106), "FirstUser", "some text №4 from fist User" },
+                    { 5, new DateTime(2021, 12, 12, 0, 32, 33, 239, DateTimeKind.Local).AddTicks(2625), "SecondUser", "some text №1 from second User" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_loginModels_UserName",
-                table: "loginModels",
-                column: "UserName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tickets_loginModelId",
+                name: "IX_tickets_LoginModelUserName",
                 table: "tickets",
-                column: "loginModelId");
+                column: "LoginModelUserName");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
