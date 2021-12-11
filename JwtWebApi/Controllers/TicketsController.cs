@@ -24,14 +24,6 @@ namespace JwtWebApi.Controllers
 
         }
 
-        // GET: api/Tickets
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> Gettickets()
-        {
-            return await _context.tickets.ToListAsync();
-        }
-
         // POST: api/Tickets
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
