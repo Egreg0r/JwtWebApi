@@ -28,8 +28,8 @@ namespace JwtWebApi.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    message = table.Column<string>(type: "text", nullable: true),
-                    loginModelId = table.Column<int>(type: "integer", nullable: true),
+                    message = table.Column<string>(type: "text", nullable: false),
+                    loginModelId = table.Column<int>(type: "integer", nullable: false),
                     createDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
@@ -40,7 +40,26 @@ namespace JwtWebApi.Migrations
                         column: x => x.loginModelId,
                         principalTable: "loginModels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "loginModels",
+                columns: new[] { "Id", "Password", "UserName" },
+                values: new object[,]
+                {
+                    { 1, "PasswordFistUser", "FirstUser" },
+                    { 2, "PasswordSecond", "SecondUser" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "tickets",
+                columns: new[] { "Id", "createDate", "loginModelId", "message" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2021, 12, 11, 16, 29, 45, 81, DateTimeKind.Local).AddTicks(2485), 1, "some text from fist User" },
+                    { 2, new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9321), 1, "some text 2 from fist User" },
+                    { 3, new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9766), 2, "some text from second User" }
                 });
 
             migrationBuilder.CreateIndex(

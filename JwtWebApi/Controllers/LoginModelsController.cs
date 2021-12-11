@@ -19,12 +19,11 @@ namespace JwtWebApi.Controllers
         public LoginModelsController(BaseContext context)
         {
             _context = context;
-            if (_context.loginModels.Count() == 0)
-            {
-                _context.loginModels.AddRange(FakeDataFactory.loginModels);
-                _context.tickets.AddRange(FakeDataFactory.tickets);
-                _context.SaveChanges();
-            }
+            //if (_context.loginModels.Count() == 0)
+            //{
+            //    _context.loginModels.AddRange(FakeDataFactory.loginModels);
+            //    _context.SaveChanges();
+            //}
 
         }
 
@@ -51,34 +50,34 @@ namespace JwtWebApi.Controllers
 
         // PUT: api/LoginModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLoginModel(int id, LoginModel loginModel)
-        {
-            if (id != loginModel.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutLoginModel(int id, LoginModel loginModel)
+        //{
+        //    if (id != loginModel.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(loginModel).State = EntityState.Modified;
+        //    _context.Entry(loginModel).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LoginModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!LoginModelExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/LoginModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -92,24 +91,24 @@ namespace JwtWebApi.Controllers
         }
 
         // DELETE: api/LoginModels/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLoginModel(int id)
-        {
-            var loginModel = await _context.loginModels.FindAsync(id);
-            if (loginModel == null)
-            {
-                return NotFound();
-            }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteLoginModel(int id)
+        //{
+        //    var loginModel = await _context.loginModels.FindAsync(id);
+        //    if (loginModel == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.loginModels.Remove(loginModel);
-            await _context.SaveChangesAsync();
+        //    _context.loginModels.Remove(loginModel);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool LoginModelExists(int id)
-        {
-            return _context.loginModels.Any(e => e.Id == id);
-        }
+        //private bool LoginModelExists(int id)
+        //{
+        //    return _context.loginModels.Any(e => e.Id == id);
+        //}
     }
 }

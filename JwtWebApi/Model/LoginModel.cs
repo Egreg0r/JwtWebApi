@@ -14,6 +14,11 @@ namespace JwtWebApi.Model
     [Index("UserName", IsUnique = true)]
     public class LoginModel:BaseEntity
     {
+        public LoginModel() 
+        { 
+            Tickets = new List<Ticket>(); 
+        }
+
         [Required]
         [MinLength(3, ErrorMessage="Имя не менее трех символов")]
         public string UserName { get; set; }

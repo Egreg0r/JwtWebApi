@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JwtWebApi.Model;
+using JwtWebApi.Data;
 
 namespace JwtWebApi.Controllers
 {
@@ -18,6 +19,12 @@ namespace JwtWebApi.Controllers
         public TicketsController(BaseContext context)
         {
             _context = context;
+            //if (_context.tickets.Count() ==0)
+            //{
+            //    _context.tickets.AddRange(FakeDataFactory.tickets);
+            //    _context.SaveChanges();
+            //}
+
         }
 
         // GET: api/Tickets

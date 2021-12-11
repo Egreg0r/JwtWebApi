@@ -40,6 +40,20 @@ namespace JwtWebApi.Migrations
                         .IsUnique();
 
                     b.ToTable("loginModels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Password = "PasswordFistUser",
+                            UserName = "FirstUser"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Password = "PasswordSecond",
+                            UserName = "SecondUser"
+                        });
                 });
 
             modelBuilder.Entity("JwtWebApi.Model.Ticket", b =>
@@ -52,10 +66,11 @@ namespace JwtWebApi.Migrations
                     b.Property<DateTime>("createDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("loginModelId")
+                    b.Property<int>("loginModelId")
                         .HasColumnType("integer");
 
                     b.Property<string>("message")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -63,13 +78,38 @@ namespace JwtWebApi.Migrations
                     b.HasIndex("loginModelId");
 
                     b.ToTable("tickets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            createDate = new DateTime(2021, 12, 11, 16, 29, 45, 81, DateTimeKind.Local).AddTicks(2485),
+                            loginModelId = 1,
+                            message = "some text from fist User"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            createDate = new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9321),
+                            loginModelId = 1,
+                            message = "some text 2 from fist User"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            createDate = new DateTime(2021, 12, 11, 16, 29, 45, 82, DateTimeKind.Local).AddTicks(9766),
+                            loginModelId = 2,
+                            message = "some text from second User"
+                        });
                 });
 
             modelBuilder.Entity("JwtWebApi.Model.Ticket", b =>
                 {
                     b.HasOne("JwtWebApi.Model.LoginModel", "loginModel")
                         .WithMany("Tickets")
-                        .HasForeignKey("loginModelId");
+                        .HasForeignKey("loginModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("loginModel");
                 });

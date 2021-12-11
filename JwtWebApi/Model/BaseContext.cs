@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using JwtWebApi.Data;
 
 
 namespace JwtWebApi.Model
@@ -23,12 +24,16 @@ namespace JwtWebApi.Model
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<LoginModel>().HasData(FakeDataFactory.defLoginModels);
+            modelBuilder.Entity<Ticket>().HasData(FakeDataFactory.defTickets);
+
+            //base.OnModelCreating(modelBuilder);
+            
         }
 
     }
