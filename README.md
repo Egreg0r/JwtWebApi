@@ -1,3 +1,4 @@
+docker run --name postgres -e POSTGRES_PASSWORD=123456 -d postgres -p 5432:5432
 # JwtWebApi
 Сделать HTTP POST эндпоинт который получает данные в json вида :
 {
