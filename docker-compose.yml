@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  jwtwebapi:
+    image: ${DOCKER_REGISTRY-}jwtwebapi
+    build:
+      context: .
+      dockerfile: JwtWebApi/Dockerfile
